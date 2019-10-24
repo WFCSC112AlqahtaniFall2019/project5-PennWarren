@@ -6,20 +6,31 @@
 using namespace std;
 
 int main() {
-    cout << "Welcome to Blind Man's Bluff" << endl << endl;
+    srand(time(nullptr));
     bool play, invalid, guessedHigher;
+    int nWin = 0, nLoss = 0;
     string response;
-    int compValue, userValue, nWin = 0, nLoss = 0, nTie = 0;
-    srand(time(NULL));
 
+    //Create draw pile and discard pile
+    Deck game;
+    Deck discard;
+
+    //Populate and shuffle draw pile
+    game.createDeck();
+    game.shuffle();
+
+    //Each turn, both players draw a Card object
+    Card compValue, userValue;
+
+    cout << "Welcome to Blind Man's Bluff\n" << endl;
     play = true;
     while(play) {
-        // assign values to computer and user
-        compValue = rand() % 52;
-        userValue = rand() % 52;
+        // assign values to computer and user cards
+        compValue = game.drawCard();
+        userValue = game.drawCard();
 
         // get user's bet
-        cout << "Computer's value is " << compValue << endl;
+        cout << "Computer's value is " << compValue.printCard() << endl;
         invalid = true;
         while(invalid) {
             cout << "Do you think your number is higher or lower? (H/L)" << endl;
@@ -35,27 +46,31 @@ int main() {
             } else {
                 // invalid response, ask again
                 cout << "Invalid response..." << endl;
-                invalid = true;
             }
         }
 
         // determine outcome
         if((compValue < userValue && guessedHigher) || (compValue > userValue && !guessedHigher)) {
-            cout << "Great! You're right:" << endl;
+            cout << "\nGreat! You're right:" << endl;
             nWin++;
-        } else if((compValue > userValue && guessedHigher) || (compValue < userValue && !guessedHigher)) {
-            cout << "Sorry, you're wrong:" << endl;
-            nLoss++;
         } else {
-            cout << "It's a tie:" << endl;
-            nTie++;
+            cout << "\nSorry, you're wrong:" << endl;
+            nLoss++;
         }
-        cout << "\tyour value is " << userValue << endl;
+
+        // print card
+        cout << "\tyour value is " << userValue.printCard() << endl;
+
+        // add each card to the discard pile, end the game when the discard pile is full (and thus the draw pile is empty)
+        if(!discard.placeCard(compValue) || !discard.placeCard(userValue)){
+            cout << "The deck is empty.\n" << endl;
+            break;
+        }
 
         // ask user to play again
         invalid = true;
         while(invalid) {
-            cout << "Play again? (Y/N)" << endl;
+            cout << "Play again? (Y/N)\n" << endl;
             cin >> response;
             if (toupper(response.at(0)) == 'Y') {
                 // continue playing
@@ -75,7 +90,8 @@ int main() {
 
     // output stats
     cout << "Thanks for playing!" << endl;
-    cout << "Your record was " << nWin << "-" << nLoss << "-" << nTie << " (W-L-T)" << endl;
+    cout << "Your record was " << nWin << "-" << nLoss << " (W-L)" << endl;
 
     return 0;
+
 }
