@@ -21,9 +21,9 @@ Deck::Deck(const Deck& d) {
 Deck &Deck::operator=(const Deck &rhs) {
     Deck temp(rhs); //copy constructor temp
     swap(cards, temp.cards); //built-in swap
+    arraySize = rhs.arraySize;
+    cardsLeft = rhs.cardsLeft;
     return *this;
-
-    //should I add more swaps for other variables?
 }
 
 //Populates a deck with every card in a standard 52-card deck

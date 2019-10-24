@@ -1,14 +1,10 @@
 #include "Card.h"
 
-//default constructor
+//default constructor, will initialize to Ace of Clubs
 Card::Card() {
     rank = 0;
     suit = 0;
     value = 0;
-    /*
-     * Better to initialize to -1 and get garbage (clearly letting me know something is wrong)
-     * or to initialize to 0 and prevent ever getting garbage?
-     */
 }
 
 //rank and suit constructor
